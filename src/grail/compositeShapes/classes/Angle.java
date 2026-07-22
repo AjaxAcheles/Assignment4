@@ -1,6 +1,7 @@
 package grail.compositeShapes.classes;
 
 import grail.compositeShapes.interfaces.AngleInterface;
+import grail.exceptions.ImpossibleAngle;
 import grail.simpleShapes.classes.RotatingLine;
 import grail.simpleShapes.interfaces.LineInterface;
 import tags301.Comp301Tags;
@@ -30,10 +31,15 @@ public class Angle implements AngleInterface {
     }
 
     public Angle(int initialX, int initialY, double radius, double splitAngleRadians, double downDirectionRadians) {
-        this.leftLine = new RotatingLine(initialX, initialY, radius,
-                downDirectionRadians - splitAngleRadians / ANGLE_SIDE_DIVISOR);
-        this.rightLine = new RotatingLine(initialX, initialY, radius,
-                downDirectionRadians + splitAngleRadians / ANGLE_SIDE_DIVISOR);
+        this(new RotatingLine(initialX, initialY, radius,
+                        downDirectionRadians - splitAngleRadians / ANGLE_SIDE_DIVISOR),
+                new RotatingLine(initialX, initialY, radius,
+                        downDirectionRadians + splitAngleRadians / ANGLE_SIDE_DIVISOR));
+    }
+
+    protected Angle(LineInterface initialLeftLine, LineInterface initialRightLine) {
+        this.leftLine = initialLeftLine;
+        this.rightLine = initialRightLine;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class Angle implements AngleInterface {
     }
 
     @Override
-    public void rotate(int rotationUnits) {
+    public void rotate(int rotationUnits) throws ImpossibleAngle {
         this.leftLine.rotate(rotationUnits);
         this.rightLine.rotate(rotationUnits);
     }

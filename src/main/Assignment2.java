@@ -2,6 +2,7 @@ package main;
 
 import bus.uigen.ObjectEditor;
 import grail.compositeShapes.interfaces.BridgeSceneInterface;
+import grail.exceptions.ImpossibleAngle;
 import grail.views.interfaces.ConsoleSceneViewInterface;
 import util.misc.ThreadSupport;
 
@@ -23,14 +24,15 @@ public class Assignment2 {
     private static final String SWALLOW_REPLY = "African or European swallow?";
     private static ConsoleSceneViewInterface consoleSceneView;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ImpossibleAngle {
         BridgeSceneInterface bridgeScene = Factory.bridgeSceneFactoryMethod();
         ObjectEditor.edit(bridgeScene).setSize(EDITOR_WIDTH, EDITOR_HEIGHT);
         consoleSceneView = Factory.consoleSceneViewFactoryMethod();
         runAnimation(bridgeScene);
     }
 
-    private static void runAnimation(BridgeSceneInterface bridgeScene) {
+    private static void runAnimation(BridgeSceneInterface bridgeScene)
+            throws ImpossibleAngle {
         ThreadSupport.sleep(PAUSE_TIME);
         runLegacyAnimation(bridgeScene);
         runArthurPasses(bridgeScene);
@@ -38,7 +40,8 @@ public class Assignment2 {
         runGuardFails(bridgeScene);
     }
 
-    private static void runLegacyAnimation(BridgeSceneInterface bridgeScene) {
+    private static void runLegacyAnimation(BridgeSceneInterface bridgeScene)
+            throws ImpossibleAngle {
         bridgeScene.getGalahad().move(LEGACY_MOVE_X, LEGACY_MOVE_Y);
         ThreadSupport.sleep(PAUSE_TIME);
 

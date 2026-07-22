@@ -1,4 +1,18 @@
 package grail.compositeShapes.classes;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import grail.animation.classes.AnimatingCommand;
+import grail.animation.classes.AvatarAnimator;
+import grail.animation.classes.CoordinatedAnimatingCommand;
+import grail.animation.classes.CoordinatedAvatarAnimator;
+import grail.animation.classes.CoordinatingAnimatingCommand;
+import grail.animation.classes.CoordinatingAvatarAnimator;
+import grail.animation.interfaces.AvatarAnimatorInterface;
+import grail.animation.interfaces.CoordinatedAvatarAnimatorInterface;
+import grail.animation.interfaces.CoordinatingAvatarAnimatorInterface;
 import grail.compositeShapes.interfaces.AvatarInterface;
 import grail.compositeShapes.interfaces.BridgeSceneInterface;
 import grail.compositeShapes.interfaces.GorgeInterface;
@@ -56,6 +70,11 @@ public class BridgeScene implements BridgeSceneInterface {
     private static final String GALAHAD_IMAGE = "images/galahad.jpg";
     private static final String GUARD_SPEECH = "I am random guard";
     private static final String GUARD_IMAGE = "images/guard.jpg";
+    private static final String PRECONDITION_PROPERTY = "this";
+    private static final String APPROACH_METHOD = "approach";
+    private static final String SAY_METHOD = "say";
+    private static final String PASSED_METHOD = "passed";
+    private static final String FAILED_METHOD = "failed";
 	
     private final AvatarInterface arthur;
     private final AvatarInterface lancelot;
@@ -65,6 +84,17 @@ public class BridgeScene implements BridgeSceneInterface {
     private final GorgeInterface gorge;
     private final StandingAreaInterface knightArea;
     private final StandingAreaInterface guardArea;
+    private final List<PropertyChangeListener> propertyChangeListeners;
+    private final AvatarAnimatorInterface arthurAnimator;
+    private final AvatarAnimatorInterface galahadAnimator;
+    private final AvatarAnimatorInterface lancelotAnimator;
+    private final AvatarAnimatorInterface robinAnimator;
+    private final AvatarAnimatorInterface guardAnimator;
+    private final CoordinatedAvatarAnimatorInterface coordinatedArthurAnimator;
+    private final CoordinatedAvatarAnimatorInterface coordinatedGalahadAnimator;
+    private final CoordinatedAvatarAnimatorInterface coordinatedLancelotAnimator;
+    private final CoordinatedAvatarAnimatorInterface coordinatedRobinAnimator;
+    private final CoordinatingAvatarAnimatorInterface coordinatingGuardAnimator;
     private boolean knightTurn;
     private AvatarInterface failureTarget;
 
@@ -78,6 +108,22 @@ public class BridgeScene implements BridgeSceneInterface {
         this.gorge = new Gorge(GORGE_X, GORGE_Y, GORGE_WIDTH, GORGE_HEIGHT, BRIDGE_Y, BRIDGE_HEIGHT);
         this.knightArea = new StandingArea(KNIGHT_AREA_X, KNIGHT_AREA_Y, AREA_WIDTH, AREA_HEIGHT);
         this.guardArea = new StandingArea(GUARD_AREA_X, GUARD_AREA_Y, AREA_WIDTH, AREA_HEIGHT);
+        this.propertyChangeListeners = new ArrayList<PropertyChangeListener>();
+        this.arthurAnimator = new AvatarAnimator();
+        this.galahadAnimator = new AvatarAnimator();
+        this.lancelotAnimator = new AvatarAnimator();
+        this.robinAnimator = new AvatarAnimator();
+        this.guardAnimator = new AvatarAnimator();
+        this.coordinatedArthurAnimator = new CoordinatedAvatarAnimator(
+                Factory.broadcastingClearanceManagerFactoryMethod());
+        this.coordinatedGalahadAnimator = new CoordinatedAvatarAnimator(
+                Factory.broadcastingClearanceManagerFactoryMethod());
+        this.coordinatedLancelotAnimator = new CoordinatedAvatarAnimator(
+                Factory.broadcastingClearanceManagerFactoryMethod());
+        this.coordinatedRobinAnimator = new CoordinatedAvatarAnimator(
+                Factory.broadcastingClearanceManagerFactoryMethod());
+        this.coordinatingGuardAnimator = new CoordinatingAvatarAnimator(
+                Factory.broadcastingClearanceManagerFactoryMethod());
         // store objs in a table
         TableInterface<AvatarInterface> avatarTable = Factory.avatarTableFactoryMethod();
         avatarTable.put("Arthur", this.arthur);
@@ -142,20 +188,47 @@ public class BridgeScene implements BridgeSceneInterface {
     }
 
     @Override
+    public boolean preApproach() {
+        return !this.getOccupied();
+    }
+
+    @Override
+    public boolean preSay() {
+        return this.getOccupied();
+    }
+
+    @Override
+    public boolean prePassed() {
+        return this.getOccupied() && !this.getKnightTurn();
+    }
+
+    @Override
+    public boolean preFailed() {
+        return this.getOccupied();
+    }
+
+    @Override
     @Tags(Comp301Tags.APPROACH)
     public void approach(AvatarInterface avatar) {
-        if (!this.isKnight(avatar) || this.getOccupied()) {
+        assert this.preApproach();
+        if (!this.preApproach() || !this.isKnight(avatar)) {
             return;
         }
+        boolean oldApproach = this.preApproach();
+        boolean oldSay = this.preSay();
+        boolean oldPassed = this.prePassed();
+        boolean oldFailed = this.preFailed();
         this.clearSpeech();
         this.moveTo(avatar, this.knightArea.getCenterX(), this.knightArea.getCenterY());
         this.knightTurn = false;
         this.failureTarget = null;
+        this.notifyPreconditionChanges(oldApproach, oldSay, oldPassed, oldFailed);
     }
 
     @Override
     @Tags(Comp301Tags.APPROACH)
     public void approach(String avatarName) {
+        assert this.preApproach();
         AvatarInterface avatar = Factory.avatarTableFactoryMethod().get(avatarName);
         this.approach(avatar);
     }
@@ -163,6 +236,14 @@ public class BridgeScene implements BridgeSceneInterface {
     @Override
     @Tags(Comp301Tags.SAY)
     public void say(String text) {
+        assert this.preSay();
+        if (!this.preSay()) {
+            return;
+        }
+        boolean oldApproach = this.preApproach();
+        boolean oldSay = this.preSay();
+        boolean oldPassed = this.prePassed();
+        boolean oldFailed = this.preFailed();
         if (this.knightTurn) {
             AvatarInterface knight = this.getOccupyingKnight();
             if (knight != null) {
@@ -174,25 +255,43 @@ public class BridgeScene implements BridgeSceneInterface {
             this.failureTarget = this.getOccupyingKnight();
         }
         this.knightTurn = !this.knightTurn;
+        this.notifyPreconditionChanges(oldApproach, oldSay, oldPassed, oldFailed);
     }
 
     @Override
     @Tags(Comp301Tags.PASSED)
     public void passed() {
+        assert this.prePassed();
+        if (!this.prePassed()) {
+            return;
+        }
+        boolean oldApproach = this.preApproach();
+        boolean oldSay = this.preSay();
+        boolean oldPassed = this.prePassed();
+        boolean oldFailed = this.preFailed();
         AvatarInterface knight = this.getOccupyingKnight();
-        if (knight != null && !this.knightTurn) {
+        if (knight != null) {
             this.clearSpeech();
             this.moveTo(knight, PASSED_X, this.knightArea.getCenterY());
             this.knightTurn = false;
             this.failureTarget = null;
         }
+        this.notifyPreconditionChanges(oldApproach, oldSay, oldPassed, oldFailed);
     }
 
     @Override
     @Tags(Comp301Tags.FAILED)
     public void failed() {
+        assert this.preFailed();
+        if (!this.preFailed()) {
+            return;
+        }
+        boolean oldApproach = this.preApproach();
+        boolean oldSay = this.preSay();
+        boolean oldPassed = this.prePassed();
+        boolean oldFailed = this.preFailed();
         AvatarInterface failedAvatar = this.failureTarget;
-        if (failedAvatar == null && this.knightTurn) {
+        if (failedAvatar == null) {
             failedAvatar = this.getOccupyingKnight();
         }
 
@@ -207,6 +306,12 @@ public class BridgeScene implements BridgeSceneInterface {
             this.knightTurn = false;
             this.failureTarget = null;
         }
+        this.notifyPreconditionChanges(oldApproach, oldSay, oldPassed, oldFailed);
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.propertyChangeListeners.add(listener);
     }
 
     @Override
@@ -216,6 +321,90 @@ public class BridgeScene implements BridgeSceneInterface {
         this.robin.move(-changeInX, -changeInY);
         this.galahad.move(-changeInX, -changeInY);
         this.guard.move(-changeInX, -changeInY);
+    }
+
+    @Override
+    public void asynchronousArthur() {
+        this.startCommand(new AnimatingCommand(this.arthurAnimator, this.arthur));
+    }
+
+    @Override
+    public void asynchronousGalahad() {
+        this.startCommand(new AnimatingCommand(this.galahadAnimator, this.galahad));
+    }
+
+    @Override
+    public void asynchronousLancelot() {
+        this.startCommand(new AnimatingCommand(this.lancelotAnimator, this.lancelot));
+    }
+
+    @Override
+    public void asynchronousRobin() {
+        this.startCommand(new AnimatingCommand(this.robinAnimator, this.robin));
+    }
+
+    @Override
+    public void asynchronousGuard() {
+        this.startCommand(new AnimatingCommand(this.guardAnimator, this.guard, true, false));
+    }
+
+    @Override
+    public void waitingArthur() {
+        this.startCommand(new AnimatingCommand(this.arthurAnimator, this.arthur, false, true));
+    }
+
+    @Override
+    public void waitingGalahad() {
+        this.startCommand(new AnimatingCommand(this.galahadAnimator, this.galahad, false, true));
+    }
+
+    @Override
+    public void waitingLancelot() {
+        this.startCommand(new AnimatingCommand(this.lancelotAnimator, this.lancelot, false, true));
+    }
+
+    @Override
+    public void waitingRobin() {
+        this.startCommand(new AnimatingCommand(this.robinAnimator, this.robin, false, true));
+    }
+
+    @Override
+    public void startAnimation() {
+        Factory.broadcastingClearanceManagerFactoryMethod().proceedAll();
+    }
+
+    @Override
+    public void lockstepArthur() {
+        this.startCommand(new CoordinatedAnimatingCommand(
+                this.coordinatedArthurAnimator, this.arthur));
+    }
+
+    @Override
+    public void lockstepGalahad() {
+        this.startCommand(new CoordinatedAnimatingCommand(
+                this.coordinatedGalahadAnimator, this.galahad));
+    }
+
+    @Override
+    public void lockstepLancelot() {
+        this.startCommand(new CoordinatedAnimatingCommand(
+                this.coordinatedLancelotAnimator, this.lancelot));
+    }
+
+    @Override
+    public void lockstepRobin() {
+        this.startCommand(new CoordinatedAnimatingCommand(
+                this.coordinatedRobinAnimator, this.robin));
+    }
+
+    @Override
+    public void lockstepGuard() {
+        this.startCommand(new CoordinatingAnimatingCommand(
+                this.coordinatingGuardAnimator, this.guard));
+    }
+
+    private void startCommand(Runnable command) {
+        new Thread(command).start();
     }
 
     private AvatarInterface getOccupyingKnight() {
@@ -260,5 +449,28 @@ public class BridgeScene implements BridgeSceneInterface {
 
     private boolean textAsksQuestion(String text) {
         return text.trim().endsWith("?");
+    }
+
+    private void notifyPreconditionChanges(boolean oldApproach, boolean oldSay,
+            boolean oldPassed, boolean oldFailed) {
+        this.notifyPreconditionChange(APPROACH_METHOD, oldApproach, this.preApproach());
+        this.notifyPreconditionChange(SAY_METHOD, oldSay, this.preSay());
+        this.notifyPreconditionChange(PASSED_METHOD, oldPassed, this.prePassed());
+        this.notifyPreconditionChange(FAILED_METHOD, oldFailed, this.preFailed());
+    }
+
+    private void notifyPreconditionChange(String methodName, boolean oldValue,
+            boolean newValue) {
+        if (oldValue == newValue) {
+            return;
+        }
+        PropertyChangeEvent event = new PropertyChangeEvent(
+                this, PRECONDITION_PROPERTY, methodName, newValue);
+        int listenerIndex = 0;
+        while (listenerIndex < this.propertyChangeListeners.size()) {
+            PropertyChangeListener listener = this.propertyChangeListeners.get(listenerIndex);
+            listener.propertyChange(event);
+            listenerIndex++;
+        }
     }
 }

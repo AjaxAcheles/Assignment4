@@ -1,6 +1,5 @@
 package grail.simpleShapes.interfaces;
-import grail.atomicShapes.interfaces.PointInterface;
-import grail.compositeShapes.interfaces.BoundedShapeInterface;
+
 import grail.exceptions.ImpossibleAngle;
 import tags301.Comp301Tags;
 import util.annotations.EditablePropertyNames;
@@ -9,19 +8,11 @@ import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Tags;
 
-@Tags(Comp301Tags.ROTATING_LINE)
+@Tags({Comp301Tags.RESTRICTED_LINE})
 @StructurePattern(StructurePatternNames.LINE_PATTERN)
 @PropertyNames({"X", "Y", "Width", "Height", "Radius", "Angle", "End", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Width", "Height", "Radius", "Angle"})
-public interface LineInterface extends BoundedShapeInterface {
-    double getRadius();
-    double getAngle();
-    void setRadius(double radius);
+public interface RestrictedLineInterface extends LineInterface {
+    @Override
     void setAngle(double angle) throws ImpossibleAngle;
-
-    PointInterface getEnd();
-    
-    void rotate(int units) throws ImpossibleAngle;
-    void move(int moveX, int moveY);
-    void scale(double scaleMultiplier);
 }

@@ -15,11 +15,11 @@ import util.annotations.Tags;
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 @PropertyNames({"X", "Y", "Width", "Height", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Width", "Height"})
-public class BoundedShape extends Locatable implements BoundedShapeInterface {
+public abstract class BoundedShape extends Locatable implements BoundedShapeInterface {
     private int width;
     private int height;
 
-    public BoundedShape(int initialX, int initialY, int initialWidth, int initialHeight) {
+    protected BoundedShape(int initialX, int initialY, int initialWidth, int initialHeight) {
         super(initialX, initialY);
         this.width = initialWidth;
         this.height = initialHeight;

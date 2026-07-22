@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import grail.atomicShapes.classes.PolarPoint;
 import grail.atomicShapes.interfaces.PointInterface;
 import grail.compositeShapes.classes.BoundedShape;
+import grail.exceptions.ImpossibleAngle;
 import grail.simpleShapes.interfaces.LineInterface;
 import tags301.Comp301Tags;
 import util.annotations.EditablePropertyNames;
@@ -69,7 +70,7 @@ public class RotatingLine extends BoundedShape implements LineInterface {
     }
 
     @Override
-    public void setAngle(double newAngleRadians) {
+    public void setAngle(double newAngleRadians) throws ImpossibleAngle {
         double oldAngle = this.angleRadians;
         int oldWidth = this.getWidth();
         int oldHeight = this.getHeight();
@@ -83,7 +84,7 @@ public class RotatingLine extends BoundedShape implements LineInterface {
     }
 
     @Override
-    public void rotate(int units) {
+    public void rotate(int units) throws ImpossibleAngle {
         this.setAngle(this.angleRadians + Math.toRadians(units));
     }
 

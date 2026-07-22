@@ -5,6 +5,7 @@ import grail.atomicShapes.classes.Text;
 import grail.atomicShapes.interfaces.TextInterface;
 import grail.compositeShapes.interfaces.AngleInterface;
 import grail.compositeShapes.interfaces.AvatarInterface;
+import grail.exceptions.ImpossibleAngle;
 import grail.simpleShapes.classes.Image;
 import grail.simpleShapes.classes.RotatingLine;
 import grail.simpleShapes.interfaces.ImageInterface;
@@ -120,7 +121,7 @@ public class Avatar extends Locatable implements AvatarInterface {
     }
 
     @Override
-    public void rotate(double degrees) {
+    public void rotate(double degrees) throws ImpossibleAngle {
         int rotationUnits = (int) Math.round(degrees);
 
         this.legs.rotate(rotationUnits);

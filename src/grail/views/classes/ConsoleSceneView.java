@@ -13,6 +13,7 @@ public class ConsoleSceneView implements ConsoleSceneViewInterface {
     public ConsoleSceneView() {
         BridgeSceneInterface bridgeScene = Factory.bridgeSceneFactoryMethod();
         SceneViewSupport.registerScene(bridgeScene, this);
+        bridgeScene.addPropertyChangeListener(this);
     }
 
     @Override

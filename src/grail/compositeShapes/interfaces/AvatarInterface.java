@@ -2,6 +2,7 @@ package grail.compositeShapes.interfaces;
 
 import grail.atomicShapes.interfaces.LocatableInterface;
 import grail.atomicShapes.interfaces.TextInterface;
+import grail.exceptions.ImpossibleAngle;
 import grail.simpleShapes.interfaces.ImageInterface;
 import grail.simpleShapes.interfaces.LineInterface;
 import tags301.Comp301Tags;
@@ -23,6 +24,6 @@ public interface AvatarInterface extends LocatableInterface {
     LineInterface getBody();
     AngleInterface getLegs();
     void move(int moveX, int moveY);
-    void rotate(double degrees);
+    void rotate(double degrees) throws ImpossibleAngle;
     void scale(double scaleMultiplier);
 }

@@ -18,12 +18,12 @@ import util.models.AListenableVector;
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 @PropertyNames({"X", "Y", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y"})
-public class Locatable implements LocatableInterface {
+public abstract class Locatable implements LocatableInterface {
     private int xCoordinate;
     private int yCoordinate;
     private final List<PropertyChangeListener> propertyChangeListeners;
 
-    public Locatable(int initialX, int initialY) {
+    protected Locatable(int initialX, int initialY) {
         this.xCoordinate = initialX;
         this.yCoordinate = initialY;
         this.propertyChangeListeners = new AListenableVector<PropertyChangeListener>();

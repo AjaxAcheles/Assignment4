@@ -6,6 +6,7 @@ import grail.compositeShapes.interfaces.AvatarInterface;
 import grail.compositeShapes.interfaces.BridgeSceneInterface;
 import grail.compositeShapes.classes.Angle;
 import grail.compositeShapes.classes.Avatar;
+import grail.exceptions.ImpossibleAngle;
 import grail.simpleShapes.classes.RotatingLine;
 import grail.simpleShapes.interfaces.LineInterface;
 import grail.simpleShapes.classes.Image;
@@ -71,7 +72,7 @@ public class Assignment1 {
     private static final int AVATAR_MOVE_X = 300;
     private static final int AVATAR_MOVE_Y = 300;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ImpossibleAngle {
         animateLine(LINE_MODE);
     }
 
@@ -81,7 +82,7 @@ public class Assignment1 {
         ThreadSupport.sleep(PAUSE_TIME_LONG);
     }
     
-    public static void animateLine(String mode) {
+    public static void animateLine(String mode) throws ImpossibleAngle {
         if (LINE_MODE.equals(mode)) {
             LineInterface testLine = new RotatingLine(LINE_MODE_X, LINE_MODE_Y, LINE_MODE_RADIUS, LINE_MODE_ANGLE); 
             ObjectEditor.edit(testLine);
