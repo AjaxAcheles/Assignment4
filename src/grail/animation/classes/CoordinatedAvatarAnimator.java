@@ -6,16 +6,9 @@ import tags301.Comp301Tags;
 import util.annotations.Tags;
 
 @Tags(Comp301Tags.COORDINATED_ANIMATOR)
-public class CoordinatedAvatarAnimator extends AvatarAnimator
+public class CoordinatedAvatarAnimator extends AbstractAvatarAnimator
         implements CoordinatedAvatarAnimatorInterface {
-    private final BroadcastingClearanceManager clearanceManager;
-
     public CoordinatedAvatarAnimator(BroadcastingClearanceManager manager) {
-        this.clearanceManager = manager;
-    }
-
-    @Override
-    protected void animationPause() {
-        this.clearanceManager.waitForProceed();
+        super(manager, true, false);
     }
 }

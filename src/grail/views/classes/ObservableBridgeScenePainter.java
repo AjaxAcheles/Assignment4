@@ -40,11 +40,11 @@ public class ObservableBridgeScenePainter extends Component
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
-        Graphics2D graphics2D = (Graphics2D) graphics;
+        Graphics2D drawingGraphics = (Graphics2D) graphics;
         int listenerIndex = 0;
         while (listenerIndex < this.paintListeners.size()) {
             PaintListener paintListener = this.paintListeners.get(listenerIndex);
-            paintListener.paint(graphics2D);
+            paintListener.paint(drawingGraphics);
             listenerIndex++;
         }
     }

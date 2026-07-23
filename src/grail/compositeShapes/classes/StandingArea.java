@@ -14,8 +14,8 @@ import util.annotations.Visible;
 @PropertyNames({"X", "Y", "Width", "Height", "TopLine", "RightLine", "BottomLine", "LeftLine", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Width", "Height"})
 public class StandingArea extends BoundedShape implements StandingAreaInterface {
-    private static final double ZERO_ANGLE_RADIANS = 0;
-    private static final double DOWN_DIRECTION_RADIANS = Math.PI / 2;
+    private static final double ZERO_ANGLE = 0;
+    private static final double DOWN_DIRECTION = Math.PI / 2;
     private static final int CENTER_DIVISOR = 2;
 
     private final LineInterface topLine;
@@ -25,10 +25,12 @@ public class StandingArea extends BoundedShape implements StandingAreaInterface 
 
     public StandingArea(int initialX, int initialY, int initialWidth, int initialHeight) {
         super(initialX, initialY, initialWidth, initialHeight);
-        this.topLine = new RotatingLine(initialX, initialY, initialWidth, ZERO_ANGLE_RADIANS);
-        this.rightLine = new RotatingLine(initialX + initialWidth, initialY, initialHeight, DOWN_DIRECTION_RADIANS);
-        this.bottomLine = new RotatingLine(initialX, initialY + initialHeight, initialWidth, ZERO_ANGLE_RADIANS);
-        this.leftLine = new RotatingLine(initialX, initialY, initialHeight, DOWN_DIRECTION_RADIANS);
+        this.topLine = new RotatingLine(initialX, initialY, initialWidth, ZERO_ANGLE);
+        this.rightLine = new RotatingLine(initialX + initialWidth, initialY,
+                initialHeight, DOWN_DIRECTION);
+        this.bottomLine = new RotatingLine(initialX, initialY + initialHeight,
+                initialWidth, ZERO_ANGLE);
+        this.leftLine = new RotatingLine(initialX, initialY, initialHeight, DOWN_DIRECTION);
     }
 
     @Override

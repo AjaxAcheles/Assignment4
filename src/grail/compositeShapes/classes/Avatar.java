@@ -29,9 +29,9 @@ public class Avatar extends Locatable implements AvatarInterface {
     private static final int BODY_LENGTH = 68;
     private static final int LEG_RADIUS = 75;
     private static final int ARM_RADIUS = 60;
-    private static final double LEG_SPLIT_ANGLE_RADIANS = Math.PI / 3;
-    private static final double ARM_SPLIT_ANGLE_RADIANS = Math.PI / 2;
-    private static final double DOWN_DIRECTION_RADIANS = Math.PI / 2;
+    private static final double LEG_SPLIT_ANGLE = Math.PI / 3;
+    private static final double ARM_SPLIT_ANGLE = Math.PI / 2;
+    private static final double DOWN_DIRECTION = Math.PI / 2;
     private static final double SIZE_DIVISOR = 2.0;
     
     private final TextInterface speechBubble;
@@ -43,16 +43,17 @@ public class Avatar extends Locatable implements AvatarInterface {
     public Avatar(int initialX, int initialY, String speech, String headImage) {
         super(initialX, initialY);
 
-        this.legs = Factory.legsFactoryMethod(initialX, initialY, LEG_RADIUS, LEG_SPLIT_ANGLE_RADIANS,
-                DOWN_DIRECTION_RADIANS);
+        this.legs = Factory.legsFactoryMethod(initialX, initialY, LEG_RADIUS,
+                LEG_SPLIT_ANGLE, DOWN_DIRECTION);
 
-        double bodyAngleRadians = -DOWN_DIRECTION_RADIANS;
-        this.body = new RotatingLine(initialX, initialY, BODY_LENGTH, bodyAngleRadians);
+        double bodyAngle = -DOWN_DIRECTION;
+        this.body = new RotatingLine(initialX, initialY, BODY_LENGTH, bodyAngle);
 
         int neckX = this.body.getX() + this.body.getEnd().getX();
         int neckY = this.body.getY() + this.body.getEnd().getY();
 
-        this.arms = new Angle(neckX, neckY, ARM_RADIUS, ARM_SPLIT_ANGLE_RADIANS, DOWN_DIRECTION_RADIANS);
+        this.arms = new Angle(neckX, neckY, ARM_RADIUS,
+                ARM_SPLIT_ANGLE, DOWN_DIRECTION);
 
         this.head = new Image(neckX - (int) (HEAD_WIDTH / SIZE_DIVISOR), neckY - HEAD_HEIGHT,
                               HEAD_WIDTH, HEAD_HEIGHT, "", headImage);
@@ -104,7 +105,7 @@ public class Avatar extends Locatable implements AvatarInterface {
     }
 
     @Override
-    public void move(int moveX, int moveY) {
+    public void moveAvatar(int moveX, int moveY) {
         this.setX(this.getX() + moveX);
         this.setY(this.getY() + moveY);
     }
@@ -135,9 +136,11 @@ public class Avatar extends Locatable implements AvatarInterface {
         this.arms.move(armMoveX, armMoveY);
         this.arms.rotate(rotationUnits);
 
-        double bodyAngleRadians = this.body.getAngle();
-        int headCenterX = neckX + (int) Math.round((this.head.getHeight() / SIZE_DIVISOR) * Math.cos(bodyAngleRadians));
-        int headCenterY = neckY + (int) Math.round((this.head.getHeight() / SIZE_DIVISOR) * Math.sin(bodyAngleRadians));
+        double bodyAngle = this.body.getAngle();
+        int headCenterX = neckX + (int) Math.round(
+                (this.head.getHeight() / SIZE_DIVISOR) * Math.cos(bodyAngle));
+        int headCenterY = neckY + (int) Math.round(
+                (this.head.getHeight() / SIZE_DIVISOR) * Math.sin(bodyAngle));
         this.head.setX(headCenterX - (int) (this.head.getWidth() / SIZE_DIVISOR));
         this.head.setY(headCenterY - (int) (this.head.getHeight() / SIZE_DIVISOR));
 

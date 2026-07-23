@@ -21,12 +21,12 @@ public class Legs extends Angle implements LegsInterface {
     private static final double RIGHT_MAXIMUM_ANGLE = Math.PI / 2;
 
     public Legs(int initialX, int initialY, double radius,
-            double splitAngleRadians, double downDirectionRadians) {
+            double splitAngle, double downDirection) {
         super(new RestrictedLine(initialX, initialY, radius,
-                        downDirectionRadians + splitAngleRadians / ANGLE_SIDE_DIVISOR,
+                        downDirection + splitAngle / ANGLE_SIDE_DIVISOR,
                         LEFT_MINIMUM_ANGLE, LEFT_MAXIMUM_ANGLE),
                 new RestrictedLine(initialX, initialY, radius,
-                        downDirectionRadians - splitAngleRadians / ANGLE_SIDE_DIVISOR,
+                        downDirection - splitAngle / ANGLE_SIDE_DIVISOR,
                         RIGHT_MINIMUM_ANGLE, RIGHT_MAXIMUM_ANGLE));
     }
 }

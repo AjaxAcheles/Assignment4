@@ -23,22 +23,33 @@ public class RotatingLine extends BoundedShape implements LineInterface {
     private static final int DEFAULT_X = 100;
     private static final int DEFAULT_Y = 100;
     private static final double DEFAULT_RADIUS = 50.0;
-    private static final double DEFAULT_ANGLE_RADIANS = Math.PI / 4;
+    private static final double DEFAULT_ANGLE = Math.PI / 4;
 
     private final PointInterface endPoint;
-    private double angleRadians;
+    private final double minimumAngle;
+    private final double maximumAngle;
+    private double angleValue;
 
     public RotatingLine() {
-        this(DEFAULT_X, DEFAULT_Y, DEFAULT_RADIUS, DEFAULT_ANGLE_RADIANS);
+        this(DEFAULT_X, DEFAULT_Y, DEFAULT_RADIUS, DEFAULT_ANGLE);
     }
 
     
-    public RotatingLine(int startX, int startY, double radius, double initialAngleRadians) {
+    public RotatingLine(int startX, int startY, double radius, double initialAngle) {
+        this(startX, startY, radius, initialAngle,
+                Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    }
+
+    protected RotatingLine(int startX, int startY, double radius,
+            double initialAngle, double lowerAngleBound,
+            double upperAngleBound) {
         super(startX, startY,
-                (int) Math.round(radius * Math.cos(initialAngleRadians)),
-                (int) Math.round(radius * Math.sin(initialAngleRadians)));
-        this.angleRadians = initialAngleRadians;
-        this.endPoint = new PolarPoint(radius, initialAngleRadians);
+                (int) Math.round(radius * Math.cos(initialAngle)),
+                (int) Math.round(radius * Math.sin(initialAngle)));
+        this.angleValue = initialAngle;
+        this.endPoint = new PolarPoint(radius, initialAngle);
+        this.minimumAngle = lowerAngleBound;
+        this.maximumAngle = upperAngleBound;
     }
 
     @Override
@@ -48,7 +59,7 @@ public class RotatingLine extends BoundedShape implements LineInterface {
     
     @Override
     public double getAngle() {
-        return this.angleRadians;
+        return this.angleValue;
     }
 
     @Override
@@ -70,26 +81,32 @@ public class RotatingLine extends BoundedShape implements LineInterface {
     }
 
     @Override
-    public void setAngle(double newAngleRadians) throws ImpossibleAngle {
-        double oldAngle = this.angleRadians;
+    public void setAngle(double newAngle) throws ImpossibleAngle {
+        if (newAngle < this.minimumAngle
+                || newAngle > this.maximumAngle) {
+            throw new ImpossibleAngle("Illegal angle " + newAngle
+                    + "; legal range is [" + this.minimumAngle
+                    + ", " + this.maximumAngle + "]");
+        }
+        double oldAngle = this.angleValue;
         int oldWidth = this.getWidth();
         int oldHeight = this.getHeight();
-        this.angleRadians = newAngleRadians;
-        this.endPoint.setAngle(newAngleRadians);
+        this.angleValue = newAngle;
+        this.endPoint.setAngle(newAngle);
         this.setWidthWithoutNotification(this.endPoint.getX());
         this.setHeightWithoutNotification(this.endPoint.getY());
-        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, newAngleRadians));
+        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, newAngle));
         this.notifyAllListeners(new PropertyChangeEvent(this, "Width", oldWidth, this.getWidth()));
         this.notifyAllListeners(new PropertyChangeEvent(this, "Height", oldHeight, this.getHeight()));
     }
 
     @Override
     public void rotate(int units) throws ImpossibleAngle {
-        this.setAngle(this.angleRadians + Math.toRadians(units));
+        this.setAngle(this.angleValue + Math.toRadians(units));
     }
 
     @Override
-    public void move(int moveX, int moveY) {
+    public void moveLine(int moveX, int moveY) {
         this.setX(this.getX() + moveX);
         this.setY(this.getY() + moveY);
     }
@@ -104,9 +121,9 @@ public class RotatingLine extends BoundedShape implements LineInterface {
         double oldRadius = this.getRadius();
         double oldAngle = this.getAngle();
         this.endPoint.setX(newWidth);
-        this.angleRadians = this.endPoint.getAngle();
+        this.angleValue = this.endPoint.getAngle();
         this.notifyAllListeners(new PropertyChangeEvent(this, "Radius", oldRadius, this.getRadius()));
-        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, this.angleRadians));
+        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, this.angleValue));
     }
 
     @Override
@@ -114,8 +131,8 @@ public class RotatingLine extends BoundedShape implements LineInterface {
         double oldRadius = this.getRadius();
         double oldAngle = this.getAngle();
         this.endPoint.setY(newHeight);
-        this.angleRadians = this.endPoint.getAngle();
+        this.angleValue = this.endPoint.getAngle();
         this.notifyAllListeners(new PropertyChangeEvent(this, "Radius", oldRadius, this.getRadius()));
-        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, this.angleRadians));
+        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, this.angleValue));
     }
 }

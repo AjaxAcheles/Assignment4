@@ -11,7 +11,7 @@ import util.annotations.Tags;
 @Tags(Comp301Tags.OBSERVABLE_BRIDGE_SCENE_PAINTER)
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 @PropertyNames({"PaintListeners"})
-public interface ObservableBridgeScenePainterInterface {
+public interface ObservableBridgeScenePainterInterface extends GraphicsPainterInterface {
     List<PaintListener> getPaintListeners();
 
     void addPaintListener(PaintListener paintListener);

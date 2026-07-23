@@ -1,6 +1,5 @@
 package grail.simpleShapes.interfaces;
 
-import grail.exceptions.ImpossibleAngle;
 import tags301.Comp301Tags;
 import util.annotations.EditablePropertyNames;
 import util.annotations.PropertyNames;
@@ -13,6 +12,4 @@ import util.annotations.Tags;
 @PropertyNames({"X", "Y", "Width", "Height", "Radius", "Angle", "End", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Width", "Height", "Radius", "Angle"})
 public interface RestrictedLineInterface extends LineInterface {
-    @Override
-    void setAngle(double angle) throws ImpossibleAngle;
 }

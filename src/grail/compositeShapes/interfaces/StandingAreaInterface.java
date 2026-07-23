@@ -10,11 +10,9 @@ import util.annotations.StructurePatternNames;
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 @PropertyNames({"X", "Y", "Width", "Height", "TopLine", "RightLine", "BottomLine", "LeftLine", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Width", "Height"})
-public interface StandingAreaInterface extends BoundedShapeInterface {
+public interface StandingAreaInterface extends BoundedShapeInterface, LinePairInterface {
     LineInterface getTopLine();
-    LineInterface getRightLine();
     LineInterface getBottomLine();
-    LineInterface getLeftLine();
     @Visible(false)
     int getCenterX();
     @Visible(false)

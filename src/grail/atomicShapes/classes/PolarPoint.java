@@ -12,9 +12,9 @@ import util.annotations.StructurePatternNames;
 @EditablePropertyNames({"X", "Y", "Angle", "Radius"})
 public class PolarPoint extends CartesianPoint {
 
-	public PolarPoint(double initialRadius, double initialAngleRadians) {
-		super((int) Math.round(initialRadius * Math.cos(initialAngleRadians)),
-		        (int) Math.round(initialRadius * Math.sin(initialAngleRadians)));
+	public PolarPoint(double initialRadius, double initialAngle) {
+		super((int) Math.round(initialRadius * Math.cos(initialAngle)),
+		        (int) Math.round(initialRadius * Math.sin(initialAngle)));
 	}
 
 	public PolarPoint(int initialX, int initialY) {

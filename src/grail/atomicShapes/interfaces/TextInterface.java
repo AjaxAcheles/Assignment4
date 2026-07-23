@@ -8,7 +8,5 @@ import util.annotations.StructurePatternNames;
 @StructurePattern(StructurePatternNames.STRING_PATTERN)
 @PropertyNames({"X", "Y", "Text", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Text"})
-public interface TextInterface extends LocatableInterface {
-    String getText();
-    void setText(String newText);
+public interface TextInterface extends LocatableInterface, TextualInterface {
 }

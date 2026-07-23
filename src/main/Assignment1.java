@@ -27,7 +27,7 @@ public class Assignment1 {
     private static final int IMAGE_MOVE_STEP = 5;
     private static final int DEFAULT_ORIGIN_X = 0;
     private static final int DEFAULT_ORIGIN_Y = 0;
-    private static final double DEFAULT_ANGLE_RADIANS = 0;
+    private static final double DEFAULT_ANGLE = 0;
     private static final int TEST_IMAGE_X = 100;
     private static final int TEST_IMAGE_Y = 100;
     private static final int TEST_IMAGE_WIDTH = 100;
@@ -54,11 +54,11 @@ public class Assignment1 {
     private static final int ANIMATION_TARGET_X = 300;
     private static final int ANIMATION_TARGET_Y = 300;
 
-    private static final double RADIANS_PER_DEGREE = Math.PI / 180;
+    private static final double ANGLE_PER_DEGREE = Math.PI / 180;
     private static final int WALKING_CYCLE_FRAMES = 80;
-    private static final double FULL_CIRCLE_RADIANS = 2 * Math.PI;
-    private static final double RIGHT_ANGLE_RADIANS = Math.PI / 2;
-    private static final double HALF_CYCLE_RADIANS = Math.PI;
+    private static final double FULL_CIRCLE_ANGLE = 2 * Math.PI;
+    private static final double RIGHT_ANGLE = Math.PI / 2;
+    private static final double HALF_CYCLE_ANGLE = Math.PI;
     private static final double RIGHT_ANGLE_DEGREES = 90.0;
     private static final double SWING_SCALE_DENOMINATOR = 100.0;
 
@@ -95,7 +95,8 @@ public class Assignment1 {
         }
 
         else if (ROTATING_LINE_MODE.equals(mode)) {
-            LineInterface testLine = new RotatingLine(DEFAULT_ORIGIN_X, DEFAULT_ORIGIN_Y, TEST_LEGS_RADIUS, DEFAULT_ANGLE_RADIANS); 
+            LineInterface testLine = new RotatingLine(DEFAULT_ORIGIN_X,
+                    DEFAULT_ORIGIN_Y, TEST_LEGS_RADIUS, DEFAULT_ANGLE);
             ObjectEditor.edit(testLine);
 
             int nextY = testLine.getY() + ANIMATION_STEP;
@@ -143,31 +144,34 @@ public class Assignment1 {
 
         else if (ANGLE_MODE.equals(mode)) {
             AngleInterface testAngle = new Angle(TEST_ANGLE_X, TEST_ANGLE_Y, TEST_ANGLE_RADIUS,
-                    RIGHT_ANGLE_RADIANS, RIGHT_ANGLE_RADIANS);
+                    RIGHT_ANGLE, RIGHT_ANGLE);
             ObjectEditor.edit(testAngle);
         }
 
         else if (WALKING_LEGS_MODE.equals(mode)) {
             AngleInterface testLegs = new Angle(TEST_LEGS_X, TEST_LEGS_Y, TEST_LEGS_RADIUS,
-                    RIGHT_ANGLE_RADIANS, RIGHT_ANGLE_RADIANS);
+                    RIGHT_ANGLE, RIGHT_ANGLE);
 
             ObjectEditor.edit(testLegs);
 
-            double omegaRadians = FULL_CIRCLE_RADIANS / WALKING_CYCLE_FRAMES;
-            double swingAmplitudeRadians =
-                    ANIMATION_STEP / (SWING_SCALE_DENOMINATOR * omegaRadians) * RADIANS_PER_DEGREE * RADIANS_PER_DEGREE;
+            double omegaAngle = FULL_CIRCLE_ANGLE / WALKING_CYCLE_FRAMES;
+            double swingAmplitude = ANIMATION_STEP
+                    / (SWING_SCALE_DENOMINATOR * omegaAngle)
+                    * ANGLE_PER_DEGREE * ANGLE_PER_DEGREE;
 
             int frame = 0;
             while (true) {
                 testLegs.move(ANIMATION_STEP, 0);
 
-                double phaseRadians = (frame % WALKING_CYCLE_FRAMES) * omegaRadians;
+                double phaseAngle = (frame % WALKING_CYCLE_FRAMES) * omegaAngle;
 
-                double leftAngleRadians = RIGHT_ANGLE_RADIANS + swingAmplitudeRadians * Math.sin(phaseRadians);
-                double rightAngleRadians = RIGHT_ANGLE_RADIANS + swingAmplitudeRadians * Math.sin(phaseRadians + HALF_CYCLE_RADIANS);
+                double leftAngle = RIGHT_ANGLE
+                        + swingAmplitude * Math.sin(phaseAngle);
+                double rightAngle = RIGHT_ANGLE
+                        + swingAmplitude * Math.sin(phaseAngle + HALF_CYCLE_ANGLE);
 
-                testLegs.getLeftLine().setAngle(leftAngleRadians);
-                testLegs.getRightLine().setAngle(rightAngleRadians);
+                testLegs.getLeftLine().setAngle(leftAngle);
+                testLegs.getRightLine().setAngle(rightAngle);
 
                 ThreadSupport.sleep(PAUSE_TIME_ANIMATION);
                 frame++;

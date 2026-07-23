@@ -1,6 +1,7 @@
 package grail.compositeShapes.interfaces;
 
 import grail.atomicShapes.interfaces.LocatableInterface;
+import grail.atomicShapes.interfaces.MovableInterface;
 import grail.atomicShapes.interfaces.TextInterface;
 import grail.exceptions.ImpossibleAngle;
 import grail.simpleShapes.interfaces.ImageInterface;
@@ -11,19 +12,26 @@ import util.annotations.PropertyNames;
 import util.annotations.StructurePattern;
 import util.annotations.StructurePatternNames;
 import util.annotations.Tags;
+import util.annotations.Visible;
 
 @Tags(Comp301Tags.AVATAR)
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
 @PropertyNames({"X", "Y", "SpeechBubble", "StringShape", "Head", "Arms", "Body", "Legs", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y"})
-public interface AvatarInterface extends LocatableInterface {
+public interface AvatarInterface extends LocatableInterface, ScalingInterface,
+        MovableInterface {
     TextInterface getSpeechBubble();
     TextInterface getStringShape();
     ImageInterface getHead();
     AngleInterface getArms();
     LineInterface getBody();
     AngleInterface getLegs();
-    void move(int moveX, int moveY);
+    @Override
+    default void move(int moveX, int moveY) {
+        this.moveAvatar(moveX, moveY);
+    }
+
+    @Visible(false)
+    void moveAvatar(int moveX, int moveY);
     void rotate(double degrees) throws ImpossibleAngle;
-    void scale(double scaleMultiplier);
 }

@@ -13,9 +13,6 @@ import util.annotations.Tags;
 @Explanation("Location in Java coordinate System.")
 @PropertyNames({"X", "Y", "Angle", "Radius", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Angle", "Radius"})
-public interface PointInterface extends LocatableInterface {
-	double getAngle();
-	double getRadius();
-	void setRadius(double radius);
+public interface PointInterface extends LocatableInterface, PolarInterface {
 	void setAngle(double angle);
 }

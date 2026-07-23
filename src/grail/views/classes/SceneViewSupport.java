@@ -97,9 +97,10 @@ public final class SceneViewSupport {
 
     private static void drawImage(Graphics graphics, ImageInterface image,
             Component imageObserver) {
-        java.awt.Image awtImage = Toolkit.getDefaultToolkit().getImage(image.getImageFileName());
+        java.awt.Image loadedImage = Toolkit.getDefaultToolkit().getImage(
+                image.getImageFileName());
         graphics.drawImage(
-            awtImage,
+            loadedImage,
             image.getX(),
             image.getY(),
             image.getWidth(),

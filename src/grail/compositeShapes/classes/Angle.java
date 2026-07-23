@@ -19,22 +19,24 @@ public class Angle implements AngleInterface {
     private static final int DEFAULT_X = 0;
     private static final int DEFAULT_Y = 0;
     private static final double DEFAULT_RADIUS = 50;
-    private static final double DEFAULT_SPLIT_ANGLE_RADIANS = Math.PI / 2;
-    private static final double DEFAULT_DOWN_DIRECTION_RADIANS = Math.PI / 2;
+    private static final double DEFAULT_SPLIT_ANGLE = Math.PI / 2;
+    private static final double DEFAULT_DOWN_DIRECTION = Math.PI / 2;
     private static final double ANGLE_SIDE_DIVISOR = 2.0;
 
     private final LineInterface leftLine;
     private final LineInterface rightLine;
 
     public Angle() {
-        this(DEFAULT_X, DEFAULT_Y, DEFAULT_RADIUS, DEFAULT_SPLIT_ANGLE_RADIANS, DEFAULT_DOWN_DIRECTION_RADIANS);
+        this(DEFAULT_X, DEFAULT_Y, DEFAULT_RADIUS,
+                DEFAULT_SPLIT_ANGLE, DEFAULT_DOWN_DIRECTION);
     }
 
-    public Angle(int initialX, int initialY, double radius, double splitAngleRadians, double downDirectionRadians) {
+    public Angle(int initialX, int initialY, double radius,
+            double splitAngle, double downDirection) {
         this(new RotatingLine(initialX, initialY, radius,
-                        downDirectionRadians - splitAngleRadians / ANGLE_SIDE_DIVISOR),
+                        downDirection - splitAngle / ANGLE_SIDE_DIVISOR),
                 new RotatingLine(initialX, initialY, radius,
-                        downDirectionRadians + splitAngleRadians / ANGLE_SIDE_DIVISOR));
+                        downDirection + splitAngle / ANGLE_SIDE_DIVISOR));
     }
 
     protected Angle(LineInterface initialLeftLine, LineInterface initialRightLine) {
@@ -53,7 +55,7 @@ public class Angle implements AngleInterface {
     }
 
     @Override
-    public void move(int changeInX, int changeInY) {
+    public void moveAngle(int changeInX, int changeInY) {
         this.leftLine.move(changeInX, changeInY);
         this.rightLine.move(changeInX, changeInY);
     }

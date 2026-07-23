@@ -12,8 +12,8 @@ import util.annotations.StructurePatternNames;
 @PropertyNames({"LeftWall", "RightWall", "BridgeTop", "BridgeBottom"})
 @EditablePropertyNames({})
 public class Gorge implements GorgeInterface {
-    private static final double ZERO_ANGLE_RADIANS = 0;
-    private static final double DOWN_DIRECTION_RADIANS = Math.PI / 2;
+    private static final double ZERO_ANGLE = 0;
+    private static final double DOWN_DIRECTION = Math.PI / 2;
 
     private final LineInterface leftWall;
     private final LineInterface rightWall;
@@ -21,10 +21,10 @@ public class Gorge implements GorgeInterface {
     private final LineInterface bridgeBottom;
 
     public Gorge(int initialX, int initialY, int width, int height, int bridgeY, int bridgeHeight) {
-        this.leftWall = new RotatingLine(initialX, initialY, height, DOWN_DIRECTION_RADIANS);
-        this.rightWall = new RotatingLine(initialX + width, initialY, height, DOWN_DIRECTION_RADIANS);
-        this.bridgeTop = new RotatingLine(initialX, bridgeY, width, ZERO_ANGLE_RADIANS);
-        this.bridgeBottom = new RotatingLine(initialX, bridgeY + bridgeHeight, width, ZERO_ANGLE_RADIANS);
+        this.leftWall = new RotatingLine(initialX, initialY, height, DOWN_DIRECTION);
+        this.rightWall = new RotatingLine(initialX + width, initialY, height, DOWN_DIRECTION);
+        this.bridgeTop = new RotatingLine(initialX, bridgeY, width, ZERO_ANGLE);
+        this.bridgeBottom = new RotatingLine(initialX, bridgeY + bridgeHeight, width, ZERO_ANGLE);
     }
 
     @Override

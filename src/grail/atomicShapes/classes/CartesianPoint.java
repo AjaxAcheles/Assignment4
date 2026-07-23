@@ -31,18 +31,18 @@ public class CartesianPoint extends Locatable implements PointInterface {
     @Override
     public void setRadius(double newRadius) {
         double oldRadius = this.getRadius();
-        double angleRadians = this.getAngle();
-        this.setX((int) Math.round(newRadius * Math.cos(angleRadians)));
-        this.setY((int) Math.round(newRadius * Math.sin(angleRadians)));
+        double angleValue = this.getAngle();
+        this.setX((int) Math.round(newRadius * Math.cos(angleValue)));
+        this.setY((int) Math.round(newRadius * Math.sin(angleValue)));
         this.notifyAllListeners(new PropertyChangeEvent(this, "Radius", oldRadius, newRadius));
     }
 
     @Override
-    public void setAngle(double angleRadians) {
+    public void setAngle(double angleValue) {
         double oldAngle = this.getAngle();
         double radius = this.getRadius();
-        this.setX((int) Math.round(radius * Math.cos(angleRadians)));
-        this.setY((int) Math.round(radius * Math.sin(angleRadians)));
-        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, angleRadians));
+        this.setX((int) Math.round(radius * Math.cos(angleValue)));
+        this.setY((int) Math.round(radius * Math.sin(angleValue)));
+        this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, angleValue));
     }
 }

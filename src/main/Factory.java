@@ -54,8 +54,8 @@ public class Factory {
 
     public static synchronized AngleInterface legsFactoryMethod(int initialX, int initialY,
             double radius,
-            double splitAngleRadians, double downDirectionRadians) {
-        return new Legs(initialX, initialY, radius, splitAngleRadians, downDirectionRadians);
+            double splitAngle, double downDirection) {
+        return new Legs(initialX, initialY, radius, splitAngle, downDirection);
     }
 
     public static synchronized TableInterface<AvatarInterface> avatarTableFactoryMethod() {

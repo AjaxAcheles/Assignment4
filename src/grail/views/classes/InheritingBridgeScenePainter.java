@@ -33,8 +33,4 @@ public class InheritingBridgeScenePainter extends Component
         repaint();
     }
 
-    @Override
-    public void repaint() {
-        super.repaint();
-    }
 }
