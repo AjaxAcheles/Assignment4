@@ -16,7 +16,7 @@ import util.models.AListenableVector;
 
 @Tags(Comp301Tags.LOCATABLE)
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
-@PropertyNames({"X", "Y", "PropertyChangeListeners"})
+@PropertyNames({"X", "Y", "Angle", "Radius", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y"})
 public abstract class Locatable implements LocatableInterface {
     private int xCoordinate;
@@ -53,6 +53,17 @@ public abstract class Locatable implements LocatableInterface {
         this.yCoordinate = newY;
         this.locationChanged(0, newY - oldY);
         this.notifyAllListeners(new PropertyChangeEvent(this, "Y", oldY, newY));
+    }
+
+    @Override
+    public double getAngle() {
+        return Math.atan2(this.getY(), this.getX());
+    }
+
+    @Override
+    public double getRadius() {
+        return Math.sqrt(this.getX() * this.getX()
+                + this.getY() * this.getY());
     }
 
     @Override

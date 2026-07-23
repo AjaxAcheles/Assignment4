@@ -9,7 +9,7 @@ import util.annotations.StructurePatternNames;
 @StructurePattern(StructurePatternNames.POINT_PATTERN)
 @Explanation("Location in Java coordinate System.")
 @PropertyNames({"X", "Y", "Angle", "Radius", "PropertyChangeListeners"})
-@EditablePropertyNames({"X", "Y", "Angle", "Radius"})
+@EditablePropertyNames({"X", "Y"})
 public class PolarPoint extends CartesianPoint {
 
 	public PolarPoint(double initialRadius, double initialAngle) {

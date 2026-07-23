@@ -54,9 +54,9 @@ public final class SceneViewSupport {
     private static void registerStandingArea(StandingAreaInterface standingArea,
             PropertyChangeListener listener) {
         registerLine(standingArea.getTopLine(), listener);
-        registerLine(standingArea.getRightLine(), listener);
+        registerLine(standingArea.getRightBoundary(), listener);
         registerLine(standingArea.getBottomLine(), listener);
-        registerLine(standingArea.getLeftLine(), listener);
+        registerLine(standingArea.getLeftBoundary(), listener);
     }
 
     private static void registerLine(LineInterface line, PropertyChangeListener listener) {
@@ -132,8 +132,8 @@ public final class SceneViewSupport {
 
     private static void drawStandingArea(Graphics graphics, StandingAreaInterface standingArea) {
         drawLine(graphics, standingArea.getTopLine());
-        drawLine(graphics, standingArea.getRightLine());
+        drawLine(graphics, standingArea.getRightBoundary());
         drawLine(graphics, standingArea.getBottomLine());
-        drawLine(graphics, standingArea.getLeftLine());
+        drawLine(graphics, standingArea.getLeftBoundary());
     }
 }

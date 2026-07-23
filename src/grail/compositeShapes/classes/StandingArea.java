@@ -11,7 +11,7 @@ import util.annotations.StructurePatternNames;
 import util.annotations.Visible;
 
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
-@PropertyNames({"X", "Y", "Width", "Height", "TopLine", "RightLine", "BottomLine", "LeftLine", "PropertyChangeListeners"})
+@PropertyNames({"X", "Y", "Width", "Height", "TopLine", "RightBoundary", "BottomLine", "LeftBoundary", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y", "Width", "Height"})
 public class StandingArea extends BoundedShape implements StandingAreaInterface {
     private static final double ZERO_ANGLE = 0;
@@ -19,18 +19,19 @@ public class StandingArea extends BoundedShape implements StandingAreaInterface 
     private static final int CENTER_DIVISOR = 2;
 
     private final LineInterface topLine;
-    private final LineInterface rightLine;
+    private final LineInterface rightBoundary;
     private final LineInterface bottomLine;
-    private final LineInterface leftLine;
+    private final LineInterface leftBoundary;
 
     public StandingArea(int initialX, int initialY, int initialWidth, int initialHeight) {
         super(initialX, initialY, initialWidth, initialHeight);
         this.topLine = new RotatingLine(initialX, initialY, initialWidth, ZERO_ANGLE);
-        this.rightLine = new RotatingLine(initialX + initialWidth, initialY,
+        this.rightBoundary = new RotatingLine(initialX + initialWidth, initialY,
                 initialHeight, DOWN_DIRECTION);
         this.bottomLine = new RotatingLine(initialX, initialY + initialHeight,
                 initialWidth, ZERO_ANGLE);
-        this.leftLine = new RotatingLine(initialX, initialY, initialHeight, DOWN_DIRECTION);
+        this.leftBoundary = new RotatingLine(initialX, initialY,
+                initialHeight, DOWN_DIRECTION);
     }
 
     @Override
@@ -39,8 +40,8 @@ public class StandingArea extends BoundedShape implements StandingAreaInterface 
     }
 
     @Override
-    public LineInterface getRightLine() {
-        return this.rightLine;
+    public LineInterface getRightBoundary() {
+        return this.rightBoundary;
     }
 
     @Override
@@ -49,8 +50,8 @@ public class StandingArea extends BoundedShape implements StandingAreaInterface 
     }
 
     @Override
-    public LineInterface getLeftLine() {
-        return this.leftLine;
+    public LineInterface getLeftBoundary() {
+        return this.leftBoundary;
     }
 
     @Override
@@ -78,22 +79,22 @@ public class StandingArea extends BoundedShape implements StandingAreaInterface 
     @Override
     protected void locationChanged(int changeInX, int changeInY) {
         this.topLine.move(changeInX, changeInY);
-        this.rightLine.move(changeInX, changeInY);
+        this.rightBoundary.move(changeInX, changeInY);
         this.bottomLine.move(changeInX, changeInY);
-        this.leftLine.move(changeInX, changeInY);
+        this.leftBoundary.move(changeInX, changeInY);
     }
 
     @Override
     protected void widthChanged(int oldWidth, int newWidth) {
         this.topLine.setWidth(newWidth);
-        this.rightLine.setX(this.getX() + newWidth);
+        this.rightBoundary.setX(this.getX() + newWidth);
         this.bottomLine.setWidth(newWidth);
     }
 
     @Override
     protected void heightChanged(int oldHeight, int newHeight) {
-        this.rightLine.setHeight(newHeight);
+        this.rightBoundary.setHeight(newHeight);
         this.bottomLine.setY(this.getY() + newHeight);
-        this.leftLine.setHeight(newHeight);
+        this.leftBoundary.setHeight(newHeight);
     }
 }

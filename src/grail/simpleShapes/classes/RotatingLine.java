@@ -67,7 +67,7 @@ public class RotatingLine extends BoundedShape implements LineInterface {
         double oldRadius = this.getRadius();
         int oldWidth = this.getWidth();
         int oldHeight = this.getHeight();
-        this.endPoint.setRadius(newRadius);
+        this.setEndPoint(newRadius, this.angleValue);
         this.setWidthWithoutNotification(this.endPoint.getX());
         this.setHeightWithoutNotification(this.endPoint.getY());
         this.notifyAllListeners(new PropertyChangeEvent(this, "Radius", oldRadius, newRadius));
@@ -92,7 +92,7 @@ public class RotatingLine extends BoundedShape implements LineInterface {
         int oldWidth = this.getWidth();
         int oldHeight = this.getHeight();
         this.angleValue = newAngle;
-        this.endPoint.setAngle(newAngle);
+        this.setEndPoint(this.getRadius(), newAngle);
         this.setWidthWithoutNotification(this.endPoint.getX());
         this.setHeightWithoutNotification(this.endPoint.getY());
         this.notifyAllListeners(new PropertyChangeEvent(this, "Angle", oldAngle, newAngle));
@@ -114,6 +114,11 @@ public class RotatingLine extends BoundedShape implements LineInterface {
     @Override
     public void scale(double scaleMultiplier) {
         this.setRadius(this.getRadius() * scaleMultiplier);
+    }
+
+    private void setEndPoint(double radius, double angle) {
+        this.endPoint.setX((int) Math.round(radius * Math.cos(angle)));
+        this.endPoint.setY((int) Math.round(radius * Math.sin(angle)));
     }
 
     @Override

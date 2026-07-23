@@ -14,9 +14,10 @@ import util.models.PropertyListenerRegisterer;
 
 @Tags(Comp301Tags.LOCATABLE)
 @StructurePattern(StructurePatternNames.BEAN_PATTERN)
-@PropertyNames({"X", "Y", "PropertyChangeListeners"})
+@PropertyNames({"X", "Y", "Angle", "Radius", "PropertyChangeListeners"})
 @EditablePropertyNames({"X", "Y"})
-public interface LocatableInterface extends PropertyListenerRegisterer {
+public interface LocatableInterface extends PropertyListenerRegisterer,
+        PolarInterface {
     int getX();
     void setX(int newX);
     int getY();
